@@ -26,7 +26,7 @@ class TrackingController extends ControllerMVC {
     }, onError: (a) {
       print(a);
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     }, onDone: () {
       listenForOrderStatus();
@@ -68,7 +68,8 @@ class TrackingController extends ControllerMVC {
             child: Text(
               '${Helper.skipHtml(order.hint)}',
             )),
-        isActive: (int.tryParse(order.orderStatus.id)) >= (int.tryParse(_orderStatus.id)),
+        isActive: (int.tryParse(order.orderStatus.id)) >=
+            (int.tryParse(_orderStatus.id)),
       ));
     });
     return _orderStatusSteps;
@@ -76,7 +77,7 @@ class TrackingController extends ControllerMVC {
 
   Future<void> refreshOrder() async {
     order = new Order();
-    listenForOrder(message: S.of(context).tracking_refreshed_successfuly);
+    listenForOrder(message: S.of(state.context).tracking_refreshed_successfuly);
   }
 
   void doCancelOrder() {
@@ -92,7 +93,8 @@ class TrackingController extends ControllerMVC {
       orderStatus = [];
       listenForOrderStatus();
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).orderThisorderidHasBeenCanceled(this.order.id)),
+        content: Text(
+            S.of(state.context).orderThisorderidHasBeenCanceled(this.order.id)),
       ));
     });
   }

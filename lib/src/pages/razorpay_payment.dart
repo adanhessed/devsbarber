@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -34,27 +34,36 @@ class _RazorPayPaymentWidgetState extends StateMVC<RazorPayPaymentWidget> {
         centerTitle: true,
         title: Text(
           S.of(context).razorpayPayment,
-          style: Theme.of(context).textTheme.headline6.merge(TextStyle(letterSpacing: 1.3)),
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .merge(TextStyle(letterSpacing: 1.3)),
         ),
       ),
       body: Stack(
         children: <Widget>[
           InAppWebView(
-            initialUrl: _con.url,
-            initialHeaders: {},
-            initialOptions: new InAppWebViewWidgetOptions(androidInAppWebViewOptions: AndroidInAppWebViewOptions(textZoom: 120)),
+            initialUrlRequest: URLRequest(url: Uri.parse(_con.url)),
+            //initialHeaders: {},
+            //initialOptions: new InAppWebViewWidgetOptions(androidInAppWebViewOptions: AndroidInAppWebViewOptions(textZoom: 120)),
+            initialOptions: InAppWebViewGroupOptions(
+                android: AndroidInAppWebViewOptions(textZoom: 120)),
+
             onWebViewCreated: (InAppWebViewController controller) {
               _con.webView = controller;
             },
-            onLoadStart: (InAppWebViewController controller, String url) {
+            onLoadStart: (InAppWebViewController controller, Uri url) {
               setState(() {
-                _con.url = url;
+                _con.url = url.toString();
               });
-              if (url == "${GlobalConfiguration().getString('base_url')}payments/razorpay") {
-                Navigator.of(context).pushReplacementNamed('/Pages', arguments: 3);
+              if (url ==
+                  "${GlobalConfiguration().getString('base_url')}payments/razorpay") {
+                Navigator.of(context)
+                    .pushReplacementNamed('/Pages', arguments: 3);
               }
             },
-            onProgressChanged: (InAppWebViewController controller, int progress) {
+            onProgressChanged:
+                (InAppWebViewController controller, int progress) {
               setState(() {
                 _con.progress = progress / 100;
               });
@@ -65,7 +74,8 @@ class _RazorPayPaymentWidgetState extends StateMVC<RazorPayPaymentWidget> {
                   height: 3,
                   child: LinearProgressIndicator(
                     value: _con.progress,
-                    backgroundColor: Theme.of(context).accentColor.withOpacity(0.2),
+                    backgroundColor:
+                        Theme.of(context).accentColor.withOpacity(0.2),
                   ),
                 )
               : SizedBox(),

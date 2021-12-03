@@ -28,7 +28,7 @@ class CategoryController extends ControllerMVC {
       });
     }, onError: (a) {
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     }, onDone: () {
       if (message != null) {
@@ -46,7 +46,7 @@ class CategoryController extends ControllerMVC {
     }, onError: (a) {
       print(a);
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     }, onDone: () {
       if (message != null) {
@@ -107,7 +107,7 @@ class CategoryController extends ControllerMVC {
         });
       }).whenComplete(() {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
-          content: Text(S.of(context).this_product_was_added_to_cart),
+          content: Text(S.of(state.context).this_product_was_added_to_cart),
         ));
       });
     } else {
@@ -118,20 +118,23 @@ class CategoryController extends ControllerMVC {
         });
       }).whenComplete(() {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
-          content: Text(S.of(context).this_product_was_added_to_cart),
+          content: Text(S.of(state.context).this_product_was_added_to_cart),
         ));
       });
     }
   }
 
   Cart isExistInCart(Cart _cart) {
-    return carts.firstWhere((Cart oldCart) => _cart.isSame(oldCart), orElse: () => null);
+    return carts.firstWhere((Cart oldCart) => _cart.isSame(oldCart),
+        orElse: () => null);
   }
 
   Future<void> refreshCategory() async {
     products.clear();
     category = new Category();
-    listenForProductsByCategory(message: S.of(context).category_refreshed_successfuly);
-    listenForCategory(message: S.of(context).category_refreshed_successfuly);
+    listenForProductsByCategory(
+        message: S.of(state.context).category_refreshed_successfuly);
+    listenForCategory(
+        message: S.of(state.context).category_refreshed_successfuly);
   }
 }

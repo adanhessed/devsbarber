@@ -36,7 +36,7 @@ class CartController extends ControllerMVC {
     }, onError: (a) {
       print(a);
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     }, onDone: () {
       if (carts.isNotEmpty) {
@@ -62,7 +62,7 @@ class CartController extends ControllerMVC {
     }, onError: (a) {
       print(a);
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     });
   }
@@ -71,7 +71,7 @@ class CartController extends ControllerMVC {
     setState(() {
       carts = [];
     });
-    listenForCarts(message: S.of(context).carts_refreshed_successfuly);
+    listenForCarts(message: S.of(state.context).carts_refreshed_successfuly);
   }
 
   void removeFromCart(Cart _cart) async {
@@ -81,7 +81,9 @@ class CartController extends ControllerMVC {
     removeCart(_cart).then((value) {
       calculateSubtotal();
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).the_product_was_removed_from_your_cart(_cart.product.name)),
+        content: Text(S
+            .of(state.context)
+            .the_product_was_removed_from_your_cart(_cart.product.name)),
       ));
     });
   }
@@ -100,7 +102,8 @@ class CartController extends ControllerMVC {
     if (Helper.canDelivery(carts[0].product.market, carts: carts)) {
       deliveryFee = carts[0].product.market.deliveryFee;
     }
-    taxAmount = (subTotal + deliveryFee) * carts[0].product.market.defaultTax / 100;
+    taxAmount =
+        (subTotal + deliveryFee) * carts[0].product.market.defaultTax / 100;
     total = subTotal + taxAmount + deliveryFee;
     setState(() {});
   }
@@ -113,7 +116,7 @@ class CartController extends ControllerMVC {
     }, onError: (a) {
       print(a);
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     }, onDone: () {
       listenForCarts();
@@ -165,6 +168,6 @@ class CartController extends ControllerMVC {
     } else if (coupon?.valid == false) {
       return Colors.redAccent;
     }
-    return Theme.of(context).focusColor.withOpacity(0.7);
+    return Theme.of(state.context).focusColor.withOpacity(0.7);
   }
 }

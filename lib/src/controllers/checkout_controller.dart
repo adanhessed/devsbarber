@@ -38,7 +38,9 @@ class CheckoutController extends CartController {
     Order _order = new Order();
     _order.productOrders = new List<ProductOrder>();
     _order.tax = carts[0].product.market.defaultTax;
-    _order.deliveryFee = payment.method == 'Pay on Pickup' ? 0 : carts[0].product.market.deliveryFee;
+    _order.deliveryFee = payment.method == 'Pay on Pickup'
+        ? 0
+        : carts[0].product.market.deliveryFee;
     OrderStatus _orderStatus = new OrderStatus();
     _orderStatus.id = '1'; // TODO default order status Id
     _order.orderStatus = _orderStatus;
@@ -68,7 +70,7 @@ class CheckoutController extends CartController {
     userRepo.setCreditCard(creditCard).then((value) {
       setState(() {});
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).payment_card_updated_successfully),
+        content: Text(S.of(state.context).payment_card_updated_successfully),
       ));
     });
   }
