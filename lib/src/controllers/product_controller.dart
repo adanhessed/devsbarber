@@ -29,7 +29,7 @@ class ProductController extends ControllerMVC {
     }, onError: (a) {
       print(a);
       scaffoldKey.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     }, onDone: () {
       calculateTotal();
@@ -70,7 +70,8 @@ class ProductController extends ControllerMVC {
     });
     var _newCart = new Cart();
     _newCart.product = product;
-    _newCart.options = product.options.where((element) => element.checked).toList();
+    _newCart.options =
+        product.options.where((element) => element.checked).toList();
     _newCart.quantity = this.quantity;
     // if product exist in the cart then increment quantity
     var _oldCart = isExistInCart(_newCart);
@@ -82,7 +83,7 @@ class ProductController extends ControllerMVC {
         });
       }).whenComplete(() {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
-          content: Text(S.of(context).this_product_was_added_to_cart),
+          content: Text(S.of(state.context).this_product_was_added_to_cart),
         ));
       });
     } else {
@@ -93,14 +94,15 @@ class ProductController extends ControllerMVC {
         });
       }).whenComplete(() {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
-          content: Text(S.of(context).this_product_was_added_to_cart),
+          content: Text(S.of(state.context).this_product_was_added_to_cart),
         ));
       });
     }
   }
 
   Cart isExistInCart(Cart _cart) {
-    return carts.firstWhere((Cart oldCart) => _cart.isSame(oldCart), orElse: () => null);
+    return carts.firstWhere((Cart oldCart) => _cart.isSame(oldCart),
+        orElse: () => null);
   }
 
   void addToFavorite(Product product) async {
@@ -114,7 +116,7 @@ class ProductController extends ControllerMVC {
         this.favorite = value;
       });
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).thisProductWasAddedToFavorite),
+        content: Text(S.of(state.context).thisProductWasAddedToFavorite),
       ));
     });
   }
@@ -125,7 +127,7 @@ class ProductController extends ControllerMVC {
         this.favorite = new Favorite();
       });
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).thisProductWasRemovedFromFavorites),
+        content: Text(S.of(state.context).thisProductWasRemovedFromFavorites),
       ));
     });
   }
@@ -134,7 +136,9 @@ class ProductController extends ControllerMVC {
     var _id = product.id;
     product = new Product();
     listenForFavorite(productId: _id);
-    listenForProduct(productId: _id, message: S.of(context).productRefreshedSuccessfuly);
+    listenForProduct(
+        productId: _id,
+        message: S.of(state.context).productRefreshedSuccessfuly);
   }
 
   void calculateTotal() {

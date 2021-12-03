@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -14,7 +12,7 @@ import '../repository/user_repository.dart' as userRepo;
 class SplashScreenController extends ControllerMVC {
   ValueNotifier<Map<String, double>> progress = new ValueNotifier(new Map());
   GlobalKey<ScaffoldState> scaffoldKey;
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   SplashScreenController() {
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -25,10 +23,14 @@ class SplashScreenController extends ControllerMVC {
   @override
   void initState() {
     super.initState();
-    firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(sound: true, badge: true, alert: true));
+    firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
+    //  .requestNotificationPermissions(
+    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
     configureFirebase(firebaseMessaging);
     settingRepo.setting.addListener(() {
-      if (settingRepo.setting.value.appName != null && settingRepo.setting.value.appName != '' && settingRepo.setting.value.mainColor != null) {
+      if (settingRepo.setting.value.appName != null &&
+          settingRepo.setting.value.appName != '' &&
+          settingRepo.setting.value.mainColor != null) {
         progress.value["Setting"] = 41;
         // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
         progress?.notifyListeners();
@@ -42,18 +44,18 @@ class SplashScreenController extends ControllerMVC {
     });
     Timer(Duration(seconds: 20), () {
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        content: Text(S.of(context).verify_your_internet_connection),
+        content: Text(S.of(state.context).verify_your_internet_connection),
       ));
     });
   }
 
   void configureFirebase(FirebaseMessaging _firebaseMessaging) {
     try {
-      _firebaseMessaging.configure(
-        onMessage: notificationOnMessage,
-        onLaunch: notificationOnLaunch,
-        onResume: notificationOnResume,
-      );
+      // _firebaseMessaging.configure(
+      //   onMessage: notificationOnMessage,
+      //   onLaunch: notificationOnLaunch,
+      //   onResume: notificationOnResume,
+      // );
     } catch (e) {
       print(CustomTrace(StackTrace.current, message: e));
       print(CustomTrace(StackTrace.current, message: 'Error Config Firebase'));
@@ -63,7 +65,8 @@ class SplashScreenController extends ControllerMVC {
   Future notificationOnResume(Map<String, dynamic> message) async {
     try {
       if (message['data']['id'] == "orders") {
-        settingRepo.navigatorKey.currentState.pushReplacementNamed('/Pages', arguments: 3);
+        settingRepo.navigatorKey.currentState
+            .pushReplacementNamed('/Pages', arguments: 3);
       }
     } catch (e) {
       print(CustomTrace(StackTrace.current, message: e));
@@ -76,7 +79,8 @@ class SplashScreenController extends ControllerMVC {
       if (messageId != message['google.message_id']) {
         if (message['data']['id'] == "orders") {
           await settingRepo.saveMessageId(message['google.message_id']);
-          settingRepo.navigatorKey.currentState.pushReplacementNamed('/Pages', arguments: 3);
+          settingRepo.navigatorKey.currentState
+              .pushReplacementNamed('/Pages', arguments: 3);
         }
       }
     } catch (e) {

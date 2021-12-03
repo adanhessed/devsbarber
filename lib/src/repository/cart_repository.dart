@@ -43,7 +43,10 @@ Future<Stream<int>> getCartCount() async {
   final client = new http.Client();
   final streamedRest = await client.send(http.Request('get', Uri.parse(url)));
 
-  return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map(
+  return streamedRest.stream
+      .transform(utf8.decoder)
+      .transform(json.decoder)
+      .map(
         (data) => Helper.getIntData(data),
       );
 }
@@ -57,10 +60,11 @@ Future<Cart> addCart(Cart cart, bool reset) async {
   final String _apiToken = 'api_token=${_user.apiToken}';
   final String _resetParam = 'reset=${reset ? 1 : 0}';
   cart.userId = _user.id;
-  final String url = '${GlobalConfiguration().getString('api_base_url')}carts?$_apiToken&$_resetParam';
+  final String url =
+      '${GlobalConfiguration().getString('api_base_url')}carts?$_apiToken&$_resetParam';
   final client = new http.Client();
   final response = await client.post(
-    url,
+    Uri.parse(url),
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     body: json.encode(cart.toMap()),
   );
@@ -79,10 +83,11 @@ Future<Cart> updateCart(Cart cart) async {
   }
   final String _apiToken = 'api_token=${_user.apiToken}';
   cart.userId = _user.id;
-  final String url = '${GlobalConfiguration().getString('api_base_url')}carts/${cart.id}?$_apiToken';
+  final String url =
+      '${GlobalConfiguration().getString('api_base_url')}carts/${cart.id}?$_apiToken';
   final client = new http.Client();
   final response = await client.put(
-    url,
+    Uri.parse(url),
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     body: json.encode(cart.toMap()),
   );
@@ -95,10 +100,11 @@ Future<bool> removeCart(Cart cart) async {
     return false;
   }
   final String _apiToken = 'api_token=${_user.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}carts/${cart.id}?$_apiToken';
+  final String url =
+      '${GlobalConfiguration().getString('api_base_url')}carts/${cart.id}?$_apiToken';
   final client = new http.Client();
   final response = await client.delete(
-    url,
+    Uri.parse(url),
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
   );
   return Helper.getBoolData(json.decode(response.body));
